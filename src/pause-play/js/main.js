@@ -36,7 +36,7 @@ class FeedTable {
   }
 
   addNewCell() {
-    if (this.col == this.numCols) {
+    if (this.col === this.numCols) {
       this.row = this.testTable.insertRow(-1);
       this.col = 0;
     }
@@ -64,10 +64,7 @@ class PeerConnection {
         .getUserMedia({
           audio: true,
           video: {
-            mandatory: {
-              maxWidth: 300,
-              minWidth: 300,
-            }
+            width: {exact: 300},
           }
         })
         .then(onGetUserMediaSuccess);
@@ -114,8 +111,6 @@ class PeerConnection {
   };
 }
 
-
-
 class TestRunner {
   constructor(runtimeSeconds, pausePlayIterationDelayMillis) {
     this.runtimeSeconds = runtimeSeconds;
@@ -159,14 +154,14 @@ class TestRunner {
     const status = this.getStatus();
     this.lastIterationTime = Date.now();
     $('status').textContent = status
-    if (status != 'ok-done') {
+    if (status !== 'ok-done') {
       setTimeout(
           () => this.pauseAndPlayLoop(), this.pausePlayIterationDelayMillis);
     }
   }
 
   getStatus() {
-    if (this.iteration == 0) {
+    if (this.iteration === 0) {
       return 'not-started';
     }
     const timeSpent = Date.now() - this.startTime;
