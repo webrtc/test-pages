@@ -116,8 +116,10 @@ class TestRunner {
           minWidth: 300,
         }
       };
-    } else {
+    } else if (elementType === 'audio') {
       constraints.video = false;
+    } else {
+      console.error("elementType must be one of 'audio' or 'video'");
     }
     this.elements.push(element);
     this.peerConnections.push(
