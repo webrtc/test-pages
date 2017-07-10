@@ -13,20 +13,6 @@ function logError(err) {
   console.error(err);
 }
 
-class VideoFeed {
-  constructor(element) {
-    this.element = element;
-  }
-
-  pause() {
-    this.element.pause();
-  }
-
-  play() {
-    this.element.play();
-  }
-}
-
 class FeedTable {
   constructor() {
     this.numCols = 5;
@@ -35,38 +21,34 @@ class FeedTable {
     this.row = this.testTable.insertRow(-1);
   }
 
-  addNewCell() {
+  addNewCell(elementType) {
     if (this.col === this.numCols) {
       this.row = this.testTable.insertRow(-1);
       this.col = 0;
     }
     var newCell = this.row.insertCell(-1);
-    var video = document.createElement('video');
-    video.autoplay = false;
-    newCell.appendChild(video);
+    var element = document.createElement(elementType);
+    element.autoplay = false;
+    newCell.appendChild(element);
     this.col++;
-    return video;
+    return element;
   }
 }
 
 class PeerConnection {
 
-  constructor(id, videoElement) {
+  constructor(id, element, constraints) {
     this.id = id;
     this.localConnection = null;
     this.remoteConnection = null;
-    this.remoteView = videoElement;
+    this.remoteView = element;
+    this.constraints = constraints;
   }
 
   start() {
     const onGetUserMediaSuccess = this.onGetUserMediaSuccess.bind(this);
     return navigator.mediaDevices
-        .getUserMedia({
-          audio: true,
-          video: {
-            width: {exact: 300},
-          }
-        })
+        .getUserMedia(this.constraints)
         .then(onGetUserMediaSuccess);
   };
 
@@ -115,7 +97,7 @@ class TestRunner {
   constructor(runtimeSeconds, pausePlayIterationDelayMillis) {
     this.runtimeSeconds = runtimeSeconds;
     this.pausePlayIterationDelayMillis = pausePlayIterationDelayMillis;
-    this.videoElements = [];
+    this.elements = [];
     this.peerConnections = [];
     this.feedTable = new FeedTable();
     this.numConnections = 0;
@@ -124,11 +106,21 @@ class TestRunner {
     this.lastIterationTime;
   }
 
-  addPeerConnection() {
-    const videoElement = this.feedTable.addNewCell();
-    this.videoElements.push(videoElement);
+  addPeerConnection(elementType) {
+    const element = this.feedTable.addNewCell(elementType);
+    const constraints = {audio: true};
+    if (elementType === 'video') {
+      constraints.video = {
+        width: {exact: 300},
+      };
+    } else if (elementType === 'audio') {
+      constraints.video = false;
+    } else {
+      throw new Error("elementType must be one of 'audio' or 'video'");
+    }
+    this.elements.push(element);
     this.peerConnections.push(
-        new PeerConnection(++this.numConnections, videoElement, true));
+        new PeerConnection(++this.numConnections, element, constraints));
   }
 
   startTest() {
@@ -144,7 +136,7 @@ class TestRunner {
 
   pauseAndPlayLoop() {
     this.iteration++;
-    this.videoElements.forEach((feed) => {
+    this.elements.forEach((feed) => {
       if (Math.random() >= 0.5) {
         feed.play();
       } else {
@@ -153,7 +145,7 @@ class TestRunner {
     });
     const status = this.getStatus();
     this.lastIterationTime = Date.now();
-    $('status').textContent = status
+    $('status').textContent = status;
     if (status !== 'ok-done') {
       setTimeout(
           () => this.pauseAndPlayLoop(), this.pausePlayIterationDelayMillis);
@@ -181,11 +173,12 @@ class TestRunner {
 let testRunner;
 
 function startTest(
-    runtimeSeconds, numPeerConnections, pausePlayIterationDelayMillis) {
+    runtimeSeconds, numPeerConnections, pausePlayIterationDelayMillis,
+    elementType) {
   testRunner = new TestRunner(
       runtimeSeconds, pausePlayIterationDelayMillis);
   for (let i = 0; i < numPeerConnections; i++) {
-    testRunner.addPeerConnection();
+    testRunner.addPeerConnection(elementType);
   }
   testRunner.startTest();
 }
