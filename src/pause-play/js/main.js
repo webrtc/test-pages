@@ -116,7 +116,7 @@ class TestRunner {
     } else if (elementType === 'audio') {
       constraints.video = false;
     } else {
-      console.error("elementType must be one of 'audio' or 'video'");
+      throw new Error("elementType must be one of 'audio' or 'video'");
     }
     this.elements.push(element);
     this.peerConnections.push(
