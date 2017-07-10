@@ -111,10 +111,7 @@ class TestRunner {
     const constraints = {audio: true};
     if (elementType === 'video') {
       constraints.video = {
-        mandatory: {
-          maxWidth: 300,
-          minWidth: 300,
-        }
+        width: {exact: 300},
       };
     } else if (elementType === 'audio') {
       constraints.video = false;
