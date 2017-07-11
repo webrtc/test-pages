@@ -3,7 +3,7 @@
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
  */
-/*jshint esversion: 6 */
+/* exported startTest */
 
 'use strict';
 
@@ -50,7 +50,7 @@ class PeerConnection {
     return navigator.mediaDevices
         .getUserMedia(this.constraints)
         .then(onGetUserMediaSuccess);
-  };
+  }
 
   onGetUserMediaSuccess(stream) {
     this.localConnection = new RTCPeerConnection(null);
@@ -71,7 +71,7 @@ class PeerConnection {
     this.localConnection
         .createOffer({offerToReceiveAudio: 1, offerToReceiveVideo: 1})
         .then(onCreateOfferSuccess, logError);
-  };
+  }
 
   onCreateOfferSuccess(desc) {
     this.localConnection.setLocalDescription(desc);
@@ -79,18 +79,18 @@ class PeerConnection {
 
     var onCreateAnswerSuccess = this.onCreateAnswerSuccess.bind(this);
     this.remoteConnection.createAnswer().then(onCreateAnswerSuccess, logError);
-  };
+  }
 
   onCreateAnswerSuccess(desc) {
     this.remoteConnection.setLocalDescription(desc);
     this.localConnection.setRemoteDescription(desc);
-  };
+  }
 
   onIceCandidate(connection, event) {
     if (event.candidate) {
       connection.addIceCandidate(new RTCIceCandidate(event.candidate));
     }
-  };
+  }
 }
 
 class TestRunner {
@@ -102,8 +102,8 @@ class TestRunner {
     this.feedTable = new FeedTable();
     this.numConnections = 0;
     this.iteration = 0;
-    this.startTime;
-    this.lastIterationTime;
+    this.startTime = null;
+    this.lastIterationTime = null;
   }
 
   addPeerConnection(elementType) {
@@ -111,12 +111,12 @@ class TestRunner {
     const constraints = {audio: true};
     if (elementType === 'video') {
       constraints.video = {
-        width: {exact: 300},
+        width: {exact: 300}
       };
     } else if (elementType === 'audio') {
       constraints.video = false;
     } else {
-      throw new Error("elementType must be one of 'audio' or 'video'");
+      throw new Error('elementType must be one of "audio" or "video"');
     }
     this.elements.push(element);
     this.peerConnections.push(
@@ -131,7 +131,9 @@ class TestRunner {
           this.startTime = Date.now();
           this.pauseAndPlayLoop();
         })
-        .catch((e) => {throw e});
+        .catch((e) => {
+          throw e;
+        });
   }
 
   pauseAndPlayLoop() {
@@ -159,9 +161,8 @@ class TestRunner {
     const timeSpent = Date.now() - this.startTime;
     if (timeSpent >= this.runtimeSeconds * 1000) {
       return 'ok-done';
-    } else {
-      return `running, iteration: ${this.iteration}`;
     }
+    return `running, iteration: ${this.iteration}`;
   }
 
   getResults() {

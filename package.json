@@ -19,7 +19,7 @@
     "url": "https://github.com/webrtc/test-pages.git"
   },
   "scripts": {
-    "lint": "grunt"
+    "test": "grunt"
   },
   "devDependencies": {
     "eslint-config-webrtc": "^1.0.0",

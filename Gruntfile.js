@@ -27,9 +27,10 @@ module.exports = function(grunt) {
     },
     htmlhint: {
       html1: {
-        src: [
-          'src/**/*.html, index.html'
-        ]
+        src: ['src/**/*.html']
+      },
+      html2: {
+        src: ['index.html']
       }
     },
   });
