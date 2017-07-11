@@ -13,6 +13,9 @@ function logError(err) {
   console.error(err);
 }
 
+/**
+ * FeedTable stores all video elements.
+ */
 class FeedTable {
   constructor() {
     this.numCols = 5;
@@ -35,9 +38,18 @@ class FeedTable {
   }
 }
 
+/**
+ * A simple loopback connection;
+ * - localConnection is fed video from local camera
+ * - localConnection is linked to remoteConnection
+ * - remoteConnection is displayed in the given videoElement
+ */
 class PeerConnection {
-  constructor(id, element, constraints) {
-    this.id = id;
+  /**
+   * @param {Object} element - An 'audio' or 'video' element.
+   * @param {Object} constraints - The constraints for the peer connection.
+   */
+  constructor(element, constraints) {
     this.localConnection = null;
     this.remoteConnection = null;
     this.remoteView = element;
@@ -45,10 +57,11 @@ class PeerConnection {
   }
 
   start() {
-    const onGetUserMediaSuccess = this.onGetUserMediaSuccess.bind(this);
     return navigator.mediaDevices
       .getUserMedia(this.constraints)
-      .then(onGetUserMediaSuccess);
+      .then((stream) => {
+        this.onGetUserMediaSuccess(stream);
+      });
   }
 
   onGetUserMediaSuccess(stream) {
@@ -66,18 +79,21 @@ class PeerConnection {
       this.remoteView.srcObject = e.stream;
     };
 
-    var onCreateOfferSuccess = this.onCreateOfferSuccess.bind(this);
     this.localConnection
       .createOffer({offerToReceiveAudio: 1, offerToReceiveVideo: 1})
-      .then(onCreateOfferSuccess, logError);
+      .then((desc) => {
+        this.onCreateOfferSuccess(desc);
+      }, logError);
   }
 
   onCreateOfferSuccess(desc) {
     this.localConnection.setLocalDescription(desc);
     this.remoteConnection.setRemoteDescription(desc);
 
-    var onCreateAnswerSuccess = this.onCreateAnswerSuccess.bind(this);
-    this.remoteConnection.createAnswer().then(onCreateAnswerSuccess, logError);
+    this.remoteConnection.createAnswer().then(
+      () => {
+        this.onCreateAnswerSuccess(desc);
+      }, logError);
   }
 
   onCreateAnswerSuccess(desc) {
@@ -99,7 +115,6 @@ class TestRunner {
     this.elements = [];
     this.peerConnections = [];
     this.feedTable = new FeedTable();
-    this.numConnections = 0;
     this.iteration = 0;
     this.startTime = null;
     this.lastIterationTime = null;
@@ -118,8 +133,7 @@ class TestRunner {
       throw new Error('elementType must be one of "audio" or "video"');
     }
     this.elements.push(element);
-    this.peerConnections.push(
-      new PeerConnection(++this.numConnections, element, constraints));
+    this.peerConnections.push(new PeerConnection(element, constraints));
   }
 
   startTest() {
@@ -149,7 +163,13 @@ class TestRunner {
     $('status').textContent = status;
     if (status !== 'ok-done') {
       setTimeout(
-        () => this.pauseAndPlayLoop(), this.pausePlayIterationDelayMillis);
+        () => {
+          this.pauseAndPlayLoop();
+        }, this.pausePlayIterationDelayMillis);
+    } else { // We're done. Pause all feeds.
+      this.videoElements.forEach((feed) => {
+        feed.pause();
+      });
     }
   }
 
