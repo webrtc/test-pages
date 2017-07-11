@@ -127,9 +127,9 @@ function connectFromHere() {
 function negotiateCallFromHere() {
   // Set the global variables with values from our UI.
   setCreateOfferConstraints(getEvaluatedJavaScript_(
-      $('createoffer-constraints').value));
+    $('createoffer-constraints').value));
   setCreateAnswerConstraints(getEvaluatedJavaScript_(
-      $('createanswer-constraints').value));
+    $('createanswer-constraints').value));
 
   ensureHasPeerConnection_();
   negotiateCall_();
@@ -235,17 +235,17 @@ function updateGetUserMediaConstraints() {
   var selectedAudioDevice = $('audiosrc');
   var selectedVideoDevice = $('videosrc');
   global.constraints = {audio: $('audio').checked,
-                        video: $('video').checked
+    video: $('video').checked
   };
 
   if ($('video').checked) {
     global.constraints.video = {height: global.videoHeight,
-                                width: global.videoWidth};
+      width: global.videoWidth};
   }
 
   if (!selectedAudioDevice.disabled && !selectedAudioDevice.disabled) {
     var devices = getSourcesFromField_(selectedAudioDevice,
-                                       selectedVideoDevice);
+      selectedVideoDevice);
 
     if ($('audio').checked) {
       if (devices.audioId !== null) {
@@ -261,7 +261,7 @@ function updateGetUserMediaConstraints() {
   }
 
   $('getusermedia-constraints').value = JSON.stringify(global.constraints,
-      null, ' ');
+    null, ' ');
   $('getusermedia-constraints').addEventListener('change', function() {
     global.constraints = JSON.parse($('getusermedia-constraints').value);
   }, false);
@@ -438,11 +438,11 @@ function screenCaptureExtensionHandler_() {
         (adapter.browserDetails.browser === 'chrome' &&
             adapter.browserDetails.version >= 50 &&
             event.data.requestAudio) ? {
-              mandatory: {
-                chromeMediaSource: 'desktop',
-                chromeMediaSourceId: event.data.streamId
-              }
-            } : false;
+            mandatory: {
+              chromeMediaSource: 'desktop',
+              chromeMediaSourceId: event.data.streamId
+            }
+          } : false;
 
       var videoConstraints = {
         mandatory: {
@@ -529,14 +529,14 @@ function handleMessage(peerConnection, message) {
   if (parsedMsg.type) {
     var sessionDescription = new RTCSessionDescription(parsedMsg);
     peerConnection.setRemoteDescription(sessionDescription)
-    .then(
-      function() {
-        success_('setRemoteDescription');
-      },
-      function(error) {
-        error_('setRemoteDescription', error);
-      }
-    );
+      .then(
+        function() {
+          success_('setRemoteDescription');
+        },
+        function(error) {
+          error_('setRemoteDescription', error);
+        }
+      );
     if (sessionDescription.type === 'offer') {
       print_('createAnswer with constraints: ' +
             JSON.stringify(global.createAnswerConstraints, null, ' '));
@@ -553,12 +553,12 @@ function handleMessage(peerConnection, message) {
   } else if (parsedMsg.candidate) {
     var candidate = new RTCIceCandidate(parsedMsg);
     peerConnection.addIceCandidate(candidate,
-        function() {
-          success_('addIceCandidate');
-        },
-        function(error) {
-          error_('addIceCandidate', error);
-        }
+      function() {
+        success_('addIceCandidate');
+      },
+      function(error) {
+        error_('addIceCandidate', error);
+      }
     );
     return;
   }
@@ -575,10 +575,10 @@ function setPeerConnectionConstraints() {
   };
 
   global.pcConstraints.optional.push(
-      {googCpuOveruseDetection: $('cpuoveruse-detection').checked});
+    {googCpuOveruseDetection: $('cpuoveruse-detection').checked});
 
   global.pcConstraints.optional.push(
-      {RtpDataChannels: $('data-channel-type-rtp').checked});
+    {RtpDataChannels: $('data-channel-type-rtp').checked});
 
   $('pc-constraints').value = JSON.stringify(global.pcConstraints, null, ' ');
 }
@@ -622,7 +622,7 @@ function createDataChannel(peerConnection, label) {
   }
 
   global.dataChannel = peerConnection.createDataChannel(label,
-      {reliable: false});
+    {reliable: false});
   print_('DataChannel with label ' + global.dataChannel.label + ' initiated ' +
          'locally.');
   hookupDataChannelEvents();
@@ -716,7 +716,7 @@ function toggleRemoteStream(selectAudioOrVideoTrack, typeToToggle) {
     error_('Tried to toggle remote stream, but not receiving any stream.');
   }
   var track = selectAudioOrVideoTrack(
-      global.peerConnection.getRemoteStreams()[0]);
+    global.peerConnection.getRemoteStreams()[0]);
   toggle_(track, 'remote', typeToToggle);
 }
 
@@ -731,7 +731,7 @@ function toggleLocalStream(selectAudioOrVideoTrack, typeToToggle) {
            'the call.');
   }
   var track = selectAudioOrVideoTrack(
-      global.peerConnection.getLocalStreams()[0]);
+    global.peerConnection.getLocalStreams()[0]);
   toggle_(track, 'local', typeToToggle);
 }
 
@@ -887,22 +887,22 @@ function doGetUserMedia_(constraints) {
 
   print_('Requesting doGetUserMedia: constraints: ' + constraints);
   navigator.mediaDevices.getUserMedia(evaluatedConstraints)
-  .then(function(stream) {
-    global.localStream = stream;
-    success_('getUserMedia');
+    .then(function(stream) {
+      global.localStream = stream;
+      success_('getUserMedia');
 
-    if (stream.getVideoTracks().length > 0) {
+      if (stream.getVideoTracks().length > 0) {
       // Show video element if we did request video in the getUserMedia call.
-      var videoElement = $('local-view');
-      videoElement.srcObject = stream;
-      registerVideoTrackEvents(stream);
-      window.addEventListener('loadedmetadata', function() {
-        displayVideoSize(videoElement);
-      }, true);
-    }
-  }).catch(function(error) {
-    error_('GetUserMedia failed with error: ' + error.name);
-  });
+        var videoElement = $('local-view');
+        videoElement.srcObject = stream;
+        registerVideoTrackEvents(stream);
+        window.addEventListener('loadedmetadata', function() {
+          displayVideoSize(videoElement);
+        }, true);
+      }
+    }).catch(function(error) {
+      error_('GetUserMedia failed with error: ' + error.name);
+    });
 }
 
 function registerVideoTrackEvents(stream) {
@@ -1021,9 +1021,9 @@ function addStreamCallback_(event) {
   videoElement.srcObject = event.stream;
 
   window.addEventListener('loadedmetadata',
-      function() {
-        displayVideoSize(videoElement);
-      }, true);
+    function() {
+      displayVideoSize(videoElement);
+    }, true);
 }
 
 function removeStreamCallback_() {
@@ -1078,9 +1078,9 @@ function displayVideoSize(videoTag) {
 function checkIfDeviceDropdownsArePopulated_() {
   if (document.addEventListener) {
     $('audiosrc').addEventListener('DOMNodeInserted',
-         updateGetUserMediaConstraints, false);
+      updateGetUserMediaConstraints, false);
     $('videosrc').addEventListener('DOMNodeInserted',
-         updateGetUserMediaConstraints, false);
+      updateGetUserMediaConstraints, false);
   } else {
     print_('addEventListener is not supported by your browser, cannot update ' +
            'device source ID\'s automatically. Select a device from the audio' +
@@ -1096,7 +1096,7 @@ function registerLocalStorage_(elementId) {
   var element = $(elementId);
   if (element.tagName !== 'INPUT') {
     error_('You can only use registerLocalStorage_ for input elements. ' +
-          'Element \"' + element.tagName + '\" is not an input element. ');
+          'Element "' + element.tagName + '" is not an input element. ');
   }
 
   if (localStorage.getItem(element.id) === null) {
@@ -1115,7 +1115,7 @@ function registerLocalStorage_(elementId) {
       storeLocalStorageField_(this);
     };
   } else {
-    error_('Unsupportered input type: ' + '\"' + element.type + '\"');
+    error_('Unsupportered input type: ' + '"' + element.type + '"');
   }
 }
 
@@ -1129,7 +1129,7 @@ function getLocalStorageField_(element) {
   } else if (element.type === 'text') {
     element.value = localStorage.getItem(element.id);
   } else {
-    error_('Unsupportered input type: ' + '\"' + element.type + '\"');
+    error_('Unsupportered input type: ' + '"' + element.type + '"');
   }
 }
 
@@ -1202,10 +1202,10 @@ function getEvaluatedJavaScript_(stringRepresentation) {
 function forceIsac_() {
   setOutgoingSdpTransform(function(sdp) {
     // Remove all other codecs (not the video codecs though).
-    sdp = sdp.replace(/m=audio (\d+) UDP\/TLS\/RTP\/SAVPF.*\r\n/g,
-                      'm=audio $1 UDP\/TLS\/RTP\/SAVPF 104\r\n');
+    sdp = sdp.replace('/m=audio (\\d+) UDP/TLS/RTP/SAVPF.*\r\n/g',
+      'm=audio $1 UDP/TLS/RTP/SAVPF 104\r\n');
     sdp = sdp.replace('a=rtcp-fb:111 transport-cc',
-                      'a=rtcp-fb:104 transport-cc');
+      'a=rtcp-fb:104 transport-cc');
     sdp = sdp.replace('a=fmtp:111 minptime=10', 'a=fmtp:104 minptime=10');
     var t = /a=rtpmap:(?!104)\d{1,3} (?!VP8|H264|VP9|red|ulpfec|rtx).*\r\n/g;
     sdp = sdp.replace(t,'');

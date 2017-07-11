@@ -20,9 +20,13 @@ module.exports = function(grunt) {
       },
       target: ['src/**/*.js']
     },
+    // Runs the npm test command which has access to the grunt path.
     githooks: {
       all: {
-        'pre-commit': 'csslint htmlhint eslint'
+        options: {
+          command: 'npm',
+        },
+        'pre-commit': 'test'
       }
     },
     htmlhint: {

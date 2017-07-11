@@ -32,16 +32,16 @@ function requestScreenSharing(port, msg) {
   //  - 'streamId' String that can be passed to getUserMedia() API
   desktopMediaRequestId =
       chrome.desktopCapture.chooseDesktopMedia(dataSources, port.sender.tab,
-          function(streamId, options) {
-            if (streamId) {
-              msg.type = 'SS_DIALOG_SUCCESS';
-              msg.streamId = streamId;
-              msg.requestAudio = options && options.canRequestAudioTrack;
-            } else {
-              msg.type = 'SS_DIALOG_CANCEL';
-            }
-            port.postMessage(msg);
-          });
+        function(streamId, options) {
+          if (streamId) {
+            msg.type = 'SS_DIALOG_SUCCESS';
+            msg.streamId = streamId;
+            msg.requestAudio = options && options.canRequestAudioTrack;
+          } else {
+            msg.type = 'SS_DIALOG_CANCEL';
+          }
+          port.postMessage(msg);
+        });
 }
 
 function cancelScreenSharing() {

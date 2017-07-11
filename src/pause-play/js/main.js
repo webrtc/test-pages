@@ -36,7 +36,6 @@ class FeedTable {
 }
 
 class PeerConnection {
-
   constructor(id, element, constraints) {
     this.id = id;
     this.localConnection = null;
@@ -48,8 +47,8 @@ class PeerConnection {
   start() {
     const onGetUserMediaSuccess = this.onGetUserMediaSuccess.bind(this);
     return navigator.mediaDevices
-        .getUserMedia(this.constraints)
-        .then(onGetUserMediaSuccess);
+      .getUserMedia(this.constraints)
+      .then(onGetUserMediaSuccess);
   }
 
   onGetUserMediaSuccess(stream) {
@@ -69,8 +68,8 @@ class PeerConnection {
 
     var onCreateOfferSuccess = this.onCreateOfferSuccess.bind(this);
     this.localConnection
-        .createOffer({offerToReceiveAudio: 1, offerToReceiveVideo: 1})
-        .then(onCreateOfferSuccess, logError);
+      .createOffer({offerToReceiveAudio: 1, offerToReceiveVideo: 1})
+      .then(onCreateOfferSuccess, logError);
   }
 
   onCreateOfferSuccess(desc) {
@@ -120,20 +119,20 @@ class TestRunner {
     }
     this.elements.push(element);
     this.peerConnections.push(
-        new PeerConnection(++this.numConnections, element, constraints));
+      new PeerConnection(++this.numConnections, element, constraints));
   }
 
   startTest() {
     this.startTime = Date.now();
     let promises = testRunner.peerConnections.map((conn) => conn.start());
     Promise.all(promises)
-        .then(() => {
-          this.startTime = Date.now();
-          this.pauseAndPlayLoop();
-        })
-        .catch((e) => {
-          throw e;
-        });
+      .then(() => {
+        this.startTime = Date.now();
+        this.pauseAndPlayLoop();
+      })
+      .catch((e) => {
+        throw e;
+      });
   }
 
   pauseAndPlayLoop() {
@@ -150,7 +149,7 @@ class TestRunner {
     $('status').textContent = status;
     if (status !== 'ok-done') {
       setTimeout(
-          () => this.pauseAndPlayLoop(), this.pausePlayIterationDelayMillis);
+        () => this.pauseAndPlayLoop(), this.pausePlayIterationDelayMillis);
     }
   }
 
@@ -174,10 +173,10 @@ class TestRunner {
 let testRunner;
 
 function startTest(
-    runtimeSeconds, numPeerConnections, pausePlayIterationDelayMillis,
-    elementType) {
+  runtimeSeconds, numPeerConnections, pausePlayIterationDelayMillis,
+  elementType) {
   testRunner = new TestRunner(
-      runtimeSeconds, pausePlayIterationDelayMillis);
+    runtimeSeconds, pausePlayIterationDelayMillis);
   for (let i = 0; i < numPeerConnections; i++) {
     testRunner.addPeerConnection(elementType);
   }

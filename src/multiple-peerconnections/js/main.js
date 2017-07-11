@@ -47,8 +47,8 @@ function PeerConnection(id, cpuOveruseDetection) {
       audio: true,
       video: true
     })
-    .then(onGetUserMediaSuccess)
-    .catch(logError);
+      .then(onGetUserMediaSuccess)
+      .catch(logError);
   };
 
   this.onGetUserMediaSuccess = function(stream) {
@@ -82,7 +82,7 @@ function PeerConnection(id, cpuOveruseDetection) {
       offerToReceiveAudio: 1,
       offerToReceiveVideo: 1
     })
-    .then(onCreateOfferSuccess, logError);
+      .then(onCreateOfferSuccess, logError);
   };
 
   this.onCreateOfferSuccess = function(desc) {
@@ -91,7 +91,7 @@ function PeerConnection(id, cpuOveruseDetection) {
 
     var onCreateAnswerSuccess = this.onCreateAnswerSuccess.bind(this);
     this.remoteConnection.createAnswer()
-    .then(onCreateAnswerSuccess, logError);
+      .then(onCreateAnswerSuccess, logError);
   };
 
   this.onCreateAnswerSuccess = function(desc) {
