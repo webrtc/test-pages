@@ -17,18 +17,18 @@ a:hover {
 }
 
 a#viewSource {
-  display: block;
-  margin: 1.3em 0 0 0;
   border-top: 1px solid #999;
+  display: block;
+  margin: 1.3em 0 .0 0;
   padding: 1em 0 0 0;
 }
 
 body {
   font-family: 'Roboto', sans-serif;
+  font-weight: 300;
   margin: 0;
   padding: 1em;
   word-break: break-word;
-  font-weight: 300;
 }
 
 div#container {
