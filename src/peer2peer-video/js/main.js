@@ -6,7 +6,7 @@
  *  tree.
  */
 
-/*jshint esversion: 6 */
+/* jshint esversion: 6 */
 
 'use strict';
 
@@ -40,7 +40,7 @@ function start() {
   startButton.onclick = hangup;
   startButton.className = 'red';
   startButton.innerHTML = 'Stop test';
-  if (localVideo.readyState >= 3) {  // HAVE_FUTURE_DATA
+  if (localVideo.readyState >= 3) { // HAVE_FUTURE_DATA
     // Video is already ready to play, call maybeCreateStream in case oncanplay
     // fired before we registered the event handler.
     maybeCreateStream();

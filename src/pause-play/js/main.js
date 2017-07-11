@@ -3,7 +3,7 @@
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
  */
-/*jshint esversion: 6 */
+/* exported startTest */
 
 'use strict';
 
@@ -36,7 +36,6 @@ class FeedTable {
 }
 
 class PeerConnection {
-
   constructor(id, element, constraints) {
     this.id = id;
     this.localConnection = null;
@@ -48,9 +47,9 @@ class PeerConnection {
   start() {
     const onGetUserMediaSuccess = this.onGetUserMediaSuccess.bind(this);
     return navigator.mediaDevices
-        .getUserMedia(this.constraints)
-        .then(onGetUserMediaSuccess);
-  };
+      .getUserMedia(this.constraints)
+      .then(onGetUserMediaSuccess);
+  }
 
   onGetUserMediaSuccess(stream) {
     this.localConnection = new RTCPeerConnection(null);
@@ -69,9 +68,9 @@ class PeerConnection {
 
     var onCreateOfferSuccess = this.onCreateOfferSuccess.bind(this);
     this.localConnection
-        .createOffer({offerToReceiveAudio: 1, offerToReceiveVideo: 1})
-        .then(onCreateOfferSuccess, logError);
-  };
+      .createOffer({offerToReceiveAudio: 1, offerToReceiveVideo: 1})
+      .then(onCreateOfferSuccess, logError);
+  }
 
   onCreateOfferSuccess(desc) {
     this.localConnection.setLocalDescription(desc);
@@ -79,18 +78,18 @@ class PeerConnection {
 
     var onCreateAnswerSuccess = this.onCreateAnswerSuccess.bind(this);
     this.remoteConnection.createAnswer().then(onCreateAnswerSuccess, logError);
-  };
+  }
 
   onCreateAnswerSuccess(desc) {
     this.remoteConnection.setLocalDescription(desc);
     this.localConnection.setRemoteDescription(desc);
-  };
+  }
 
   onIceCandidate(connection, event) {
     if (event.candidate) {
       connection.addIceCandidate(new RTCIceCandidate(event.candidate));
     }
-  };
+  }
 }
 
 class TestRunner {
@@ -102,8 +101,8 @@ class TestRunner {
     this.feedTable = new FeedTable();
     this.numConnections = 0;
     this.iteration = 0;
-    this.startTime;
-    this.lastIterationTime;
+    this.startTime = null;
+    this.lastIterationTime = null;
   }
 
   addPeerConnection(elementType) {
@@ -111,27 +110,29 @@ class TestRunner {
     const constraints = {audio: true};
     if (elementType === 'video') {
       constraints.video = {
-        width: {exact: 300},
+        width: {exact: 300}
       };
     } else if (elementType === 'audio') {
       constraints.video = false;
     } else {
-      throw new Error("elementType must be one of 'audio' or 'video'");
+      throw new Error('elementType must be one of "audio" or "video"');
     }
     this.elements.push(element);
     this.peerConnections.push(
-        new PeerConnection(++this.numConnections, element, constraints));
+      new PeerConnection(++this.numConnections, element, constraints));
   }
 
   startTest() {
     this.startTime = Date.now();
     let promises = testRunner.peerConnections.map((conn) => conn.start());
     Promise.all(promises)
-        .then(() => {
-          this.startTime = Date.now();
-          this.pauseAndPlayLoop();
-        })
-        .catch((e) => {throw e});
+      .then(() => {
+        this.startTime = Date.now();
+        this.pauseAndPlayLoop();
+      })
+      .catch((e) => {
+        throw e;
+      });
   }
 
   pauseAndPlayLoop() {
@@ -148,7 +149,7 @@ class TestRunner {
     $('status').textContent = status;
     if (status !== 'ok-done') {
       setTimeout(
-          () => this.pauseAndPlayLoop(), this.pausePlayIterationDelayMillis);
+        () => this.pauseAndPlayLoop(), this.pausePlayIterationDelayMillis);
     }
   }
 
@@ -159,9 +160,8 @@ class TestRunner {
     const timeSpent = Date.now() - this.startTime;
     if (timeSpent >= this.runtimeSeconds * 1000) {
       return 'ok-done';
-    } else {
-      return `running, iteration: ${this.iteration}`;
     }
+    return `running, iteration: ${this.iteration}`;
   }
 
   getResults() {
@@ -173,10 +173,10 @@ class TestRunner {
 let testRunner;
 
 function startTest(
-    runtimeSeconds, numPeerConnections, pausePlayIterationDelayMillis,
-    elementType) {
+  runtimeSeconds, numPeerConnections, pausePlayIterationDelayMillis,
+  elementType) {
   testRunner = new TestRunner(
-      runtimeSeconds, pausePlayIterationDelayMillis);
+    runtimeSeconds, pausePlayIterationDelayMillis);
   for (let i = 0; i < numPeerConnections; i++) {
     testRunner.addPeerConnection(elementType);
   }

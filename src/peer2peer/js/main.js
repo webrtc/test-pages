@@ -13,7 +13,9 @@
 // TODO(jansson) rewrite to classes.
 // Global namespace object.
 var global = {};
-global.transformOutgoingSdp = function(sdp) { return sdp; };
+global.transformOutgoingSdp = function(sdp) {
+  return sdp;
+};
 // Default getUserMedia video resolution.
 global.videoWidth = 1280;
 global.videoHeight = 720;
@@ -125,9 +127,9 @@ function connectFromHere() {
 function negotiateCallFromHere() {
   // Set the global variables with values from our UI.
   setCreateOfferConstraints(getEvaluatedJavaScript_(
-      $('createoffer-constraints').value));
+    $('createoffer-constraints').value));
   setCreateAnswerConstraints(getEvaluatedJavaScript_(
-      $('createanswer-constraints').value));
+    $('createanswer-constraints').value));
 
   ensureHasPeerConnection_();
   negotiateCall_();
@@ -233,17 +235,17 @@ function updateGetUserMediaConstraints() {
   var selectedAudioDevice = $('audiosrc');
   var selectedVideoDevice = $('videosrc');
   global.constraints = {audio: $('audio').checked,
-                        video: $('video').checked
+    video: $('video').checked
   };
 
   if ($('video').checked) {
     global.constraints.video = {height: global.videoHeight,
-                                width: global.videoWidth};
+      width: global.videoWidth};
   }
 
   if (!selectedAudioDevice.disabled && !selectedAudioDevice.disabled) {
     var devices = getSourcesFromField_(selectedAudioDevice,
-                                       selectedVideoDevice);
+      selectedVideoDevice);
 
     if ($('audio').checked) {
       if (devices.audioId !== null) {
@@ -259,7 +261,7 @@ function updateGetUserMediaConstraints() {
   }
 
   $('getusermedia-constraints').value = JSON.stringify(global.constraints,
-      null, ' ');
+    null, ' ');
   $('getusermedia-constraints').addEventListener('change', function() {
     global.constraints = JSON.parse($('getusermedia-constraints').value);
   }, false);
@@ -296,7 +298,7 @@ function stopLocalStream() {
 // Adds the current local media stream to a peer connection.
 // @param {RTCPeerConnection} peerConnection
 function addLocalStreamToPeerConnection(peerConnection) {
-  if (typeof global.localStream  === 'undefined') {
+  if (typeof global.localStream === 'undefined') {
     error_('Tried to add local stream to peer connection, but there is no ' +
            'stream yet.');
   }
@@ -312,7 +314,7 @@ function addLocalStreamToPeerConnection(peerConnection) {
 // Removes the local stream from the peer connection.
 // @param {rtcpeerconnection} peerConnection
 function removeLocalStreamFromPeerConnection(peerConnection) {
-  if (typeof global.localStream  === 'undefined') {
+  if (typeof global.localStream === 'undefined') {
     error_('Tried to remove local stream from peer connection, but there is ' +
            'no stream yet.');
   }
@@ -362,7 +364,7 @@ function getDevices() {
           option.text = devices[i].deviceId;
         }
         selectedVideoDevice.appendChild(option);
-      } else if (devices[i].kind === 'audiooutput')  {
+      } else if (devices[i].kind === 'audiooutput') {
         // TODO: Add output device selection.
         return;
       } else {
@@ -436,11 +438,11 @@ function screenCaptureExtensionHandler_() {
         (adapter.browserDetails.browser === 'chrome' &&
             adapter.browserDetails.version >= 50 &&
             event.data.requestAudio) ? {
-          mandatory: {
-            chromeMediaSource: 'desktop',
-            chromeMediaSourceId: event.data.streamId
-          }
-        } : false;
+            mandatory: {
+              chromeMediaSource: 'desktop',
+              chromeMediaSourceId: event.data.streamId
+            }
+          } : false;
 
       var videoConstraints = {
         mandatory: {
@@ -498,7 +500,7 @@ function setDataCallbacks(statusCallback, dataCallback) {
 // Sends data on an active DataChannel.
 // @param {string} data The string that will be sent to the remote peer.
 function sendDataOnChannel(data) {
-  if (typeof global.dataChannel  === 'undefined') {
+  if (typeof global.dataChannel === 'undefined') {
     error_('Trying to send data, but there is no DataChannel.');
   }
   global.dataChannel.send(data);
@@ -526,12 +528,15 @@ function handleMessage(peerConnection, message) {
   var parsedMsg = JSON.parse(message);
   if (parsedMsg.type) {
     var sessionDescription = new RTCSessionDescription(parsedMsg);
-    peerConnection.setRemoteDescription(
-      sessionDescription
-    ).then(
-      function() { success_('setRemoteDescription'); },
-      function(error) { error_('setRemoteDescription', error); }
-    );
+    peerConnection.setRemoteDescription(sessionDescription)
+      .then(
+        function() {
+          success_('setRemoteDescription');
+        },
+        function(error) {
+          error_('setRemoteDescription', error);
+        }
+      );
     if (sessionDescription.type === 'offer') {
       print_('createAnswer with constraints: ' +
             JSON.stringify(global.createAnswerConstraints, null, ' '));
@@ -539,15 +544,21 @@ function handleMessage(peerConnection, message) {
         global.createAnswerConstraints
       ).then(
         setLocalAndSendMessage_,
-        function(error) { error_('createAnswer', error); }
+        function(error) {
+          error_('createAnswer', error);
+        }
       );
     }
     return;
   } else if (parsedMsg.candidate) {
     var candidate = new RTCIceCandidate(parsedMsg);
     peerConnection.addIceCandidate(candidate,
-        function() { success_('addIceCandidate'); },
-        function(error) { error_('addIceCandidate', error); }
+      function() {
+        success_('addIceCandidate');
+      },
+      function(error) {
+        error_('addIceCandidate', error);
+      }
     );
     return;
   }
@@ -564,10 +575,10 @@ function setPeerConnectionConstraints() {
   };
 
   global.pcConstraints.optional.push(
-      {googCpuOveruseDetection: $('cpuoveruse-detection').checked});
+    {googCpuOveruseDetection: $('cpuoveruse-detection').checked});
 
   global.pcConstraints.optional.push(
-      {RtpDataChannels: $('data-channel-type-rtp').checked});
+    {RtpDataChannels: $('data-channel-type-rtp').checked});
 
   $('pc-constraints').value = JSON.stringify(global.pcConstraints, null, ' ');
 }
@@ -594,7 +605,9 @@ function setupCall(peerConnection) {
     global.createOfferConstraints
   ).then(
     setLocalAndSendMessage_,
-    function(error) { error_('createOffer', error); }
+    function(error) {
+      error_('createOffer', error);
+    }
   );
 }
 
@@ -603,13 +616,13 @@ function answerCall(peerConnection, message) {
 }
 
 function createDataChannel(peerConnection, label) {
-  if (typeof global.dataChannel  !== 'undefined' &&
+  if (typeof global.dataChannel !== 'undefined' &&
       global.dataChannel.readyState !== 'closed') {
     error_('Creating DataChannel, but we already have one.');
   }
 
   global.dataChannel = peerConnection.createDataChannel(label,
-      {reliable: false});
+    {reliable: false});
   print_('DataChannel with label ' + global.dataChannel.label + ' initiated ' +
          'locally.');
   hookupDataChannelEvents();
@@ -703,7 +716,7 @@ function toggleRemoteStream(selectAudioOrVideoTrack, typeToToggle) {
     error_('Tried to toggle remote stream, but not receiving any stream.');
   }
   var track = selectAudioOrVideoTrack(
-      global.peerConnection.getRemoteStreams()[0]);
+    global.peerConnection.getRemoteStreams()[0]);
   toggle_(track, 'remote', typeToToggle);
 }
 
@@ -718,7 +731,7 @@ function toggleLocalStream(selectAudioOrVideoTrack, typeToToggle) {
            'the call.');
   }
   var track = selectAudioOrVideoTrack(
-      global.peerConnection.getLocalStreams()[0]);
+    global.peerConnection.getLocalStreams()[0]);
   toggle_(track, 'local', typeToToggle);
 }
 
@@ -776,7 +789,6 @@ function createDtmfSenderOnPeerConnection() {
 // Send DTMF tones on the global.dtmfSender.
 // Returns ok-dtmf-sent on success.
 function insertDtmfOnSender(tones, duration, interToneGap) {
-
   if (typeof global.dtmfSender === 'undefined') {
     error_('Tried to insert DTMF tones, but have no DTMF sender.');
   }
@@ -875,21 +887,22 @@ function doGetUserMedia_(constraints) {
 
   print_('Requesting doGetUserMedia: constraints: ' + constraints);
   navigator.mediaDevices.getUserMedia(evaluatedConstraints)
-  .then(function(stream) {
-    global.localStream = stream;
-    success_('getUserMedia');
+    .then(function(stream) {
+      global.localStream = stream;
+      success_('getUserMedia');
 
-    if (stream.getVideoTracks().length > 0) {
-      // Show the video element if we did request video in the getUserMedia call.
-      var videoElement = $('local-view');
-      videoElement.srcObject = stream;
-      registerVideoTrackEvents(stream);
-      window.addEventListener('loadedmetadata', function() {
-        displayVideoSize(videoElement);}, true);
-    }
-  }).catch(function(error) {
-    error_('GetUserMedia failed with error: ' + error.name);
-  });
+      if (stream.getVideoTracks().length > 0) {
+      // Show video element if we did request video in the getUserMedia call.
+        var videoElement = $('local-view');
+        videoElement.srcObject = stream;
+        registerVideoTrackEvents(stream);
+        window.addEventListener('loadedmetadata', function() {
+          displayVideoSize(videoElement);
+        }, true);
+      }
+    }).catch(function(error) {
+      error_('GetUserMedia failed with error: ' + error.name);
+    });
 }
 
 function registerVideoTrackEvents(stream) {
@@ -987,7 +1000,9 @@ function setLocalAndSendMessage_(sessionDescription) {
   global.peerConnection.setLocalDescription(
     sessionDescription
   ).then(
-    function() { success_('setLocalDescription'); },
+    function() {
+      success_('setLocalDescription');
+    },
     failedSetLocalDescription
   );
   print_('Sending SDP message:\n' + sessionDescription.sdp);
@@ -1006,7 +1021,9 @@ function addStreamCallback_(event) {
   videoElement.srcObject = event.stream;
 
   window.addEventListener('loadedmetadata',
-      function() {displayVideoSize(videoElement);}, true);
+    function() {
+      displayVideoSize(videoElement);
+    }, true);
 }
 
 function removeStreamCallback_() {
@@ -1061,9 +1078,9 @@ function displayVideoSize(videoTag) {
 function checkIfDeviceDropdownsArePopulated_() {
   if (document.addEventListener) {
     $('audiosrc').addEventListener('DOMNodeInserted',
-         updateGetUserMediaConstraints, false);
+      updateGetUserMediaConstraints, false);
     $('videosrc').addEventListener('DOMNodeInserted',
-         updateGetUserMediaConstraints, false);
+      updateGetUserMediaConstraints, false);
   } else {
     print_('addEventListener is not supported by your browser, cannot update ' +
            'device source ID\'s automatically. Select a device from the audio' +
@@ -1079,7 +1096,7 @@ function registerLocalStorage_(elementId) {
   var element = $(elementId);
   if (element.tagName !== 'INPUT') {
     error_('You can only use registerLocalStorage_ for input elements. ' +
-          'Element \"' + element.tagName + '\" is not an input element. ');
+          'Element "' + element.tagName + '" is not an input element. ');
   }
 
   if (localStorage.getItem(element.id) === null) {
@@ -1090,11 +1107,15 @@ function registerLocalStorage_(elementId) {
 
   // Registers the appropriate events for input elements.
   if (element.type === 'checkbox') {
-    element.onclick = function() { storeLocalStorageField_(this); };
+    element.onclick = function() {
+      storeLocalStorageField_(this);
+    };
   } else if (element.type === 'text') {
-    element.onblur = function() { storeLocalStorageField_(this); };
+    element.onblur = function() {
+      storeLocalStorageField_(this);
+    };
   } else {
-    error_('Unsupportered input type: ' + '\"' + element.type + '\"');
+    error_('Unsupportered input type: ' + '"' + element.type + '"');
   }
 }
 
@@ -1108,7 +1129,7 @@ function getLocalStorageField_(element) {
   } else if (element.type === 'text') {
     element.value = localStorage.getItem(element.id);
   } else {
-    error_('Unsupportered input type: ' + '\"' + element.type + '\"');
+    error_('Unsupportered input type: ' + '"' + element.type + '"');
   }
 }
 
@@ -1181,10 +1202,10 @@ function getEvaluatedJavaScript_(stringRepresentation) {
 function forceIsac_() {
   setOutgoingSdpTransform(function(sdp) {
     // Remove all other codecs (not the video codecs though).
-    sdp = sdp.replace(/m=audio (\d+) UDP\/TLS\/RTP\/SAVPF.*\r\n/g,
-                      'm=audio $1 UDP\/TLS\/RTP\/SAVPF 104\r\n');
+    sdp = sdp.replace('/m=audio (\\d+) UDP/TLS/RTP/SAVPF.*\r\n/g',
+      'm=audio $1 UDP/TLS/RTP/SAVPF 104\r\n');
     sdp = sdp.replace('a=rtcp-fb:111 transport-cc',
-                      'a=rtcp-fb:104 transport-cc');
+      'a=rtcp-fb:104 transport-cc');
     sdp = sdp.replace('a=fmtp:111 minptime=10', 'a=fmtp:104 minptime=10');
     var t = /a=rtpmap:(?!104)\d{1,3} (?!VP8|H264|VP9|red|ulpfec|rtx).*\r\n/g;
     sdp = sdp.replace(t,'');
@@ -1347,7 +1368,7 @@ function handlePeerMessage_(peerId, message) {
     closeCall_();
     return;
   }
-  if (typeof global.peerConnection  === 'undefined' &&
+  if (typeof global.peerConnection === 'undefined' &&
       global.acceptsIncomingCalls) {
     // The other side is calling us.
     print_('We are being called: answer...');
