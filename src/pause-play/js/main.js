@@ -81,24 +81,24 @@ class PeerConnection {
 
     this.localConnection
       .createOffer({offerToReceiveAudio: 1, offerToReceiveVideo: 1})
-      .then((desc) => {
-        this.onCreateOfferSuccess(desc);
+      .then((offerDesc) => {
+        this.onCreateOfferSuccess(offerDesc);
       }, logError);
   }
 
-  onCreateOfferSuccess(desc) {
-    this.localConnection.setLocalDescription(desc);
-    this.remoteConnection.setRemoteDescription(desc);
+  onCreateOfferSuccess(offerDesc) {
+    this.localConnection.setLocalDescription(offerDesc);
+    this.remoteConnection.setRemoteDescription(offerDesc);
 
     this.remoteConnection.createAnswer().then(
-      () => {
-        this.onCreateAnswerSuccess(desc);
+      (answerDesc) => {
+        this.onCreateAnswerSuccess(answerDesc);
       }, logError);
   }
 
-  onCreateAnswerSuccess(desc) {
-    this.remoteConnection.setLocalDescription(desc);
-    this.localConnection.setRemoteDescription(desc);
+  onCreateAnswerSuccess(answerDesc) {
+    this.remoteConnection.setLocalDescription(answerDesc);
+    this.localConnection.setRemoteDescription(answerDesc);
   }
 
   onIceCandidate(connection, event) {
@@ -167,7 +167,7 @@ class TestRunner {
           this.pauseAndPlayLoop();
         }, this.pausePlayIterationDelayMillis);
     } else { // We're done. Pause all feeds.
-      this.videoElements.forEach((feed) => {
+      this.elements.forEach((feed) => {
         feed.pause();
       });
     }
