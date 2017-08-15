@@ -90,10 +90,10 @@ function start() {
     audio: true,
     video: true
   })
-  .then(gotStream)
-  .catch(function(e) {
-    alert('getUserMedia() error: ' + e.name);
-  });
+    .then(gotStream)
+    .catch(function(e) {
+      alert('getUserMedia() error: ' + e.name);
+    });
 }
 
 function call() {
@@ -174,14 +174,14 @@ function setSdpDefaultCodec(sdp, type, codec, preferHwCodec) {
   var codecId = findRtpmapId(sdpLines, codec, preferHwCodec);
   if (codecId === null) {
     throw new Failure('setSdpDefaultCodec',
-            'Unknown ID for |codec| = \'' + codec + '\'.');
+      'Unknown ID for |codec| = \'' + codec + '\'.');
   }
 
   // Find 'm=|type|' line, e.g. 'm=video 9 UDP/TLS/RTP/SAVPF 100 101 107 116'.
   var mLineNo = findLine(sdpLines, 'm=' + type);
   if (mLineNo === null) {
     throw new Failure('setSdpDefaultCodec',
-            '\'m=' + type + '\' line missing from |sdp|.');
+      '\'m=' + type + '\' line missing from |sdp|.');
   }
 
   // Modify video line to use the desired codec as the default.
@@ -374,16 +374,16 @@ function onCreateAnswerSuccess(desc) {
 
 function onIceCandidate(pc, event) {
   getOtherPc(pc).addIceCandidate(event.candidate)
-  .then(
-    function() {
-      onAddIceCandidateSuccess(pc);
-    },
-    function(err) {
-      onAddIceCandidateError(pc, err);
-    }
-  );
+    .then(
+      function() {
+        onAddIceCandidateSuccess(pc);
+      },
+      function(err) {
+        onAddIceCandidateError(pc, err);
+      }
+    );
   trace(getName(pc) + ' ICE candidate: \n' + (event.candidate ?
-      event.candidate.candidate : '(null)'));
+    event.candidate.candidate : '(null)'));
 }
 
 function onAddIceCandidateSuccess(pc) {
