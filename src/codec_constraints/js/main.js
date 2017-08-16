@@ -21,6 +21,11 @@ var startTime;
 var localVideo = document.getElementById('localVideo');
 var remoteVideo = document.getElementById('remoteVideo');
 
+function trace(arg) {
+  var now = (window.performance.now() / 1000).toFixed(3);
+  console.log(now + ': ', arg);
+}
+
 function getSelectedVideoCodec() {
   var codec;
   if (document.getElementById('H264').checked) {
