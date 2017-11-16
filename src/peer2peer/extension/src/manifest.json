@@ -11,12 +11,12 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://test.webrtc.org/manual/*"],
+      "matches": ["https://webrtc.github.io/test-pages/src/peer2peer/*"],
       "js": ["content-script.js"]
     }
   ],
   "permissions": [
     "desktopCapture",
-    "https://test.webrtc.org/manual/*"
+    "https://webrtc.github.io/test-pages/src/peer2peer/*"
   ]
 }
