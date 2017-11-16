@@ -391,7 +391,7 @@ function displayScreenCaptureInfo() {
                 '2. Check: "Enable Developer mode"<br>' +
                 '3. Click: "Load the unpacked extension..."<br>' +
                 '4. Choose "extension" folder from the ' +
-                '<a href="http://goo.gl/kLEycY">repository</a><br>' +
+                '<a href="https://goo.gl/Q9y2R8">repository</a><br>' +
                 '5. Reload this page over https<br>' +
                 'Note: Make sure the URL permission in manifest.json matches ' +
                 'the URL for this page.';
