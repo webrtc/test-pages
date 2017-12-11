@@ -197,6 +197,20 @@ h2 {
   margin: 0 0 0.8em 0;
 }
 
+table, td, th {
+    border: 1px solid black;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td {
+    height: 50px;
+    vertical-align: bottom;
+}
+
 div {
   background: white;
 }
