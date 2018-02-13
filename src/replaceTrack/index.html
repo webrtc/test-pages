@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!--
+ *  Copyright (c) 2018 The WebRTC project authors. All Rights Reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree.
+-->
+<html>
+<head>
+  <title>ReplaceTrack</title>
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+
+<body>
+
+  <div id="container">
+    <video id="localVideo" autoplay muted></video>
+    <video id="remoteVideo" autoplay></video>
+
+    <div>
+      <button id="startButton">Start</button>
+      <button id="callButton">Call</button>
+      <button id="restartButton">Restart video with replaceTrack</button>
+      <button id="muteButton" disabled>toggle audio with replaceTrack</button>
+      <button id="hangupButton">Hang Up</button>
+    </div>
+
+  </div>
+
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
