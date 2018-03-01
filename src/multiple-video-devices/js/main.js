@@ -16,15 +16,11 @@ window.onload = function() {
 };
 
 function getSources_() {
-  if (typeof MediaStreamTrack.getSources === 'undefined') {
-    alert('Your browser does not support getSources, aborting.');
-    return;
-  }
-  MediaStreamTrack.getSources(function(devices) {
+  navigator.mediaDevices.enumerateDevices().then(function(devices) {
     for (var i = 0; i < devices.length; i++) {
-      if (devices[i].kind === 'video') {
+      if (devices[i].kind === 'videoinput') {
         deviceList[i] = devices[i];
-        requestVideo_(deviceList[i].id);
+        requestVideo_(deviceList[i].deviceId);
       }
     }
   });
@@ -32,7 +28,7 @@ function getSources_() {
 
 function requestVideo_(id) {
   navigator.mediaDevices.getUserMedia({
-    video: {optional: [{sourceId: id}]},
+    video: {deviceId: {exact: id}},
     audio: false}).then(
     function(stream) {
       getUserMediaOkCallback_(stream);
