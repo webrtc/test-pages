@@ -44,7 +44,6 @@
         "browser": true,
         "node": false
   },
-  "extends": ["eslint:recommended", "webrtc"],
   "globals": {
     "adapter": true,
     "audioContext": true,
