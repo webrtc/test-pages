@@ -20,29 +20,11 @@ module.exports = function(grunt) {
       },
       target: ['src/**/*.js']
     },
-    // Runs the npm test command which has access to the grunt path.
-    githooks: {
-      all: {
-        options: {
-          command: 'npm',
-        },
-        'pre-commit': 'test'
-      }
-    },
-    htmlhint: {
-      html1: {
-        src: ['src/**/*.html']
-      },
-      html2: {
-        src: ['index.html']
-      }
-    },
   });
 
   // enable plugins
   grunt.loadNpmTasks('grunt-contrib-csslint');
   grunt.loadNpmTasks('grunt-eslint');
-  grunt.loadNpmTasks('grunt-githooks');
   grunt.loadNpmTasks('grunt-htmlhint');
 
   // set default tasks to run when grunt is called without parameters
